@@ -1,30 +1,61 @@
 var request = require('request'),
-    cheerio = require('cheerio');
+    cheerio = require('cheerio'),
+    fs = require("fs"),
+    browserSync = require("browser-sync").create();
 
-var options = {
-    url: 'http://srh.bankofchina.com/search/whpj/search.jsp',
-    method: 'POST',
-    form: {
-        pjname: 1326
-    }
-}
+var arryData = [],
+      pageNum = 1,
+   maxPageNum = 5;
 
-console.log('爬虫程序开始运行......');
 
-// 第一步，发起getData请求
-request(options, function(err, response, body) {
+// Callback of the simplified HTTP request client
+function reqCallback(err, response, body) {
     if (!err && response.statusCode == 200) {
-        // console.log(body);
-        var $ = cheerio.load(body),
-            $tr = $('.BOC_main tr'), $child = '',
-            i = 1, len = $tr.length;
 
-        console.log('现汇买入价' + '\t' + '现钞买入价' + '\t' + '现汇卖出价' + '\t' + '发布时间')
+        var $ = cheerio.load(body),
+            $tr = $('.BOC_main tr'),
+            $child = '', arryTmp = [],
+            i = 1, len = $tr.length - 1;
 
         for (i; i < len; i++) {
             $child = $tr.eq(i).children();
-            console.log($child.eq(1).text() + '\t' + $child.eq(2).text() + '\t' + $child.eq(3).text() + '\t' + $child.eq(7).text())
+
+            arryTmp.push(Number($child.eq(1).text())) // 现汇买入
+            arryTmp.push(Number($child.eq(2).text())) // 现钞买入
+            arryTmp.push(Number($child.eq(3).text())) // 现汇卖出
+            arryTmp.push($child.eq(7).text()) // 发布时间
+
+            arryData.push(arryTmp)
+            arryTmp = []
         }
-        console.log('爬虫程序结束......');
+
+        fetchInfo()
     }
-})
+}
+
+
+// 请求数据
+function fetchInfo() {
+    if (pageNum <= maxPageNum) {
+        request({
+            url: 'http://srh.bankofchina.com/search/whpj/search.jsp',
+            method: 'POST',
+            form: {
+                pjname: 1326,
+                page: pageNum++
+            }
+        }, reqCallback)
+    } else {
+        fs.writeFile('./data.json', JSON.stringify(arryData), function(err) {
+            if (err) throw err;
+            console.log('数据保存成功');
+        })
+        browserSync.init({
+            server: "./"
+        });
+        return
+    }
+}
+
+console.log("开始抓取数据...");
+fetchInfo();

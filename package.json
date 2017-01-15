@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Vivi-wu/boc-spider#readme",
   "dependencies": {
+    "browser-sync": "^2.18.6",
     "cheerio": "^0.22.0",
     "request": "^2.79.0"
   }
