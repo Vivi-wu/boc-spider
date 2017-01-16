@@ -11,7 +11,7 @@ var arryData = [],
 // Callback of the simplified HTTP request client
 function reqCallback(err, response, body) {
     if (!err && response.statusCode == 200) {
-
+        // 解析数据
         var $ = cheerio.load(body),
             $tr = $('.BOC_main tr'),
             $child = '', arryTmp = [],
@@ -46,12 +46,15 @@ function fetchInfo() {
             }
         }, reqCallback)
     } else {
-        fs.writeFile('./data.json', JSON.stringify(arryData), function(err) {
+        // 保存数据
+        fs.writeFile('./app/data.json', JSON.stringify(arryData), function(err) {
             if (err) throw err;
             console.log('数据保存成功');
         })
+        // 前台展示数据
         browserSync.init({
-            server: "./"
+            server: "./app",
+            browser: "google chrome"
         });
         return
     }

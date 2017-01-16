@@ -1,4 +1,3 @@
-// 根据响应数据绘制曲线图
 // 基于准备好的dom，初始化echarts实例
 var myChart = echarts.init(document.getElementById('main'));
 
@@ -66,6 +65,6 @@ httpRequest.onreadystatechange = ajaxCallback;
 httpRequest.open('GET', '/data.json');
 httpRequest.send();
 
-window.onresize = function(){
-    drawLines(dataSource)
-}
+// window.onresize = function(){
+//     drawLines(dataSource)
+// }
