@@ -9,41 +9,51 @@ var dataSource = [];
 function drawLines(data) {
     myChart.setOption({
         title: {
-            text: '现汇买入价/100€'
+            text: '100€等值人民币汇率曲线图'
         },
         tooltip: {
             trigger: 'axis'
         },
         legend: {
-            data:['现汇买入', '现钞买入', '现汇卖出']
+            left: 'right',
+            data:[ '现汇卖出', '现汇买入', '现钞买入']
         },
         xAxis: {
             data: data.map(function (item) {
-                return item[3];
+                return item[3].replace(' ', '\n');
             })
         },
         yAxis: {
+            name: '金额(元)',
             min: 680
         },
-        series: [{
-            name: '现汇买入',
-            type: 'line',
-            data: data.map(function (item) {
-                return item[0];
-            })
-        },
-        {
-            name: '现钞买入',
-            type: 'line',
-            data: data.map(function (item) {
-                return item[1];
-            })
-        },
+        series: [
         {
             name: '现汇卖出',
             type: 'line',
+            markPoint: {
+                data: [{type: 'min', name: '最小值', symbolSize: 70}]
+            },
             data: data.map(function (item) {
                 return item[2];
+            })
+        },{
+            name: '现汇买入',
+            type: 'line',
+            markPoint: {
+                data: [{type: 'max', name: '最大值', symbolSize: 70}]
+            },
+            data: data.map(function (item) {
+                return item[0];
+            })
+        },{
+            name: '现钞买入',
+            type: 'line',
+            markPoint: {
+                data: [{type: 'max', name: '最大值', symbolSize: 70}]
+            },
+            data: data.map(function (item) {
+                return item[1];
             })
         }]
     });
