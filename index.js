@@ -5,7 +5,7 @@ var request = require('request'),
 
 var arryData = [],
       pageNum = 1,
-   maxPageNum = 7;
+   maxPageNum = 6;
 
 
 // Callback of the simplified HTTP request client
