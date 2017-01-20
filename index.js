@@ -37,6 +37,7 @@ function reqCallback(err, response, body) {
 // 请求数据
 function fetchInfo() {
     if (pageNum <= maxPageNum) {
+        console.log('读取第'+ pageNum +'页数据...');
         request({
             url: 'http://srh.bankofchina.com/search/whpj/search.jsp',
             method: 'POST',
@@ -60,5 +61,5 @@ function fetchInfo() {
     }
 }
 
-console.log("开始抓取数据...");
+console.log('开始抓取数据...');
 fetchInfo();
